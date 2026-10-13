@@ -2,7 +2,7 @@ begin;
 
 create extension if not exists pgtap with schema extensions;
 
-select plan(30);
+select plan(31);
 
 create or replace function pg_temp.set_auth(p_id uuid)
 returns void
@@ -238,6 +238,7 @@ select throws_ok(
       'Ulovlig feedback'
     )$$,
   '42501',
+  'new row violates row-level security policy for table "entries"',
   'client cannot insert feedback'
 );
 
@@ -249,6 +250,7 @@ select throws_ok(
       'Indbrud'
     )$$,
   '42501',
+  'new row violates row-level security policy for table "entries"',
   'client A cannot insert on client B programme'
 );
 
@@ -268,6 +270,7 @@ select throws_ok(
   $$update public.profiles set role = 'trainer'
     where id = '00000000-0000-0000-0000-0000000000a1'$$,
   '42501',
+  'permission denied for table profiles',
   'client cannot change their own role'
 );
 
@@ -275,6 +278,7 @@ select throws_ok(
   $$insert into public.dogs (owner_id, name)
     values ('00000000-0000-0000-0000-0000000000a1', 'Ulovlig hund')$$,
   '42501',
+  'new row violates row-level security policy for table "dogs"',
   'client cannot insert a dog'
 );
 
@@ -283,6 +287,15 @@ select lives_ok(
     where programme_id = '20000000-0000-0000-0000-0000000000a1'
       and kind = 'observation'$$,
   'client A can update their own observation body'
+);
+
+select throws_ok(
+  $$update public.entries
+    set programme_id = '20000000-0000-0000-0000-0000000000b2'
+    where programme_id = '20000000-0000-0000-0000-0000000000a1'$$,
+  '42501',
+  'permission denied for table entries',
+  'client cannot move an entry to another programme'
 );
 
 -- Client B cannot read or change A's data
@@ -344,6 +357,7 @@ select set_config('role', 'anon', true);
 select throws_ok(
   $$select * from public.profiles$$,
   '42501',
+  'permission denied for table profiles',
   'anonymous users cannot read profiles'
 );
 

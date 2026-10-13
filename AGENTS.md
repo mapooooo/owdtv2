@@ -235,9 +235,9 @@ Use one application, with no separate backend or microservices.
 The repository is the shared source of truth for Mathias, Cursor and ChatGPT.
 Do not assume another agent can see local or uncommitted changes.
 
-Current stage: first implementation slice (app skeleton and authentication).
-Do not implement programmes, dogs, entries, sessions or RLS until the next
-requested slice.
+Current stage: slice 2A complete (schema, migrations and RLS). Do not
+implement programme UI, invitation-from-app, timeline or calendar until
+the next requested slice.
 
 Build one small, usable slice at a time. Run checks appropriate to the change
 and report what was actually verified. Never present a stub or mock as a working
