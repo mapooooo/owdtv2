@@ -1,0 +1,2 @@
+-- No seed data. Trainer role is a privileged one-off update, see
+-- supabase/scripts/promote_trainer.sql
