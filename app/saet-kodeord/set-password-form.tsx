@@ -2,7 +2,8 @@
 
 import { useActionState } from "react";
 
-import { emptyState, updatePassword } from "@/app/login/actions";
+import { updatePassword } from "@/app/login/actions";
+import { emptyState } from "@/app/login/form-state";
 import { AuthCard, Field, FormStatus, SubmitButton } from "@/app/login/ui";
 
 export function SetPasswordForm() {

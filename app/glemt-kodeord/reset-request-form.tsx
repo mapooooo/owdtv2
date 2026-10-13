@@ -2,7 +2,8 @@
 
 import { useActionState } from "react";
 
-import { emptyState, requestPasswordReset } from "@/app/login/actions";
+import { requestPasswordReset } from "@/app/login/actions";
+import { emptyState } from "@/app/login/form-state";
 import { AuthCard, Field, FormStatus, SubmitButton } from "@/app/login/ui";
 
 export function ResetRequestForm() {
@@ -11,7 +12,7 @@ export function ResetRequestForm() {
   return (
     <AuthCard
       title="Nyt kodeord"
-      description="Skriv din e-mail. Vi sender et link, så du selv kan vælge et nyt kodeord."
+      description="Virker kun hvis kontoen allerede findes. Glemt kodeord opretter ikke adgang."
     >
       <form action={formAction} className="space-y-5">
         <Field

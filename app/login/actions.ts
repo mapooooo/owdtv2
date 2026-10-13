@@ -5,13 +5,7 @@ import { redirect } from "next/navigation";
 
 import { getSiteUrl, isSupabaseConfigured } from "@/lib/env";
 import { createClient } from "@/lib/supabase/server";
-
-export type AuthFormState = {
-  error: string | null;
-  message: string | null;
-};
-
-const emptyState: AuthFormState = { error: null, message: null };
+import type { AuthFormState } from "@/app/login/form-state";
 
 export async function login(
   _prev: AuthFormState,
@@ -77,7 +71,7 @@ export async function requestPasswordReset(
   return {
     error: null,
     message:
-      "Hvis adressen er tilknyttet et forløb, sender vi en mail med et link til at vælge nyt kodeord.",
+      "Hvis der findes en konto med den e-mail, sender vi et link til at vælge nyt kodeord. Ingen konto oprettes her.",
   };
 }
 
@@ -128,5 +122,3 @@ export async function updatePassword(
   revalidatePath("/", "layout");
   redirect("/forloeb");
 }
-
-export { emptyState };

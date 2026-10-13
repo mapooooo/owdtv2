@@ -3,7 +3,8 @@
 import { useActionState } from "react";
 import Link from "next/link";
 
-import { emptyState, login } from "@/app/login/actions";
+import { login } from "@/app/login/actions";
+import { emptyState } from "@/app/login/form-state";
 import { AuthCard, Field, FormStatus, SubmitButton } from "@/app/login/ui";
 
 export function LoginForm() {
@@ -12,7 +13,7 @@ export function LoginForm() {
   return (
     <AuthCard
       title="Log ind"
-      description="Adgang er kun for klienter i et aktivt forløb. Du får en invitation fra Mathias — der er ingen åben tilmelding."
+      description="Der er ingen åben tilmelding. Klienter får en invitation. Indtil invitationen er bygget, oprettes den første konto i Supabase."
     >
       <form action={formAction} className="space-y-5">
         <Field
