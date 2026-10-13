@@ -37,8 +37,11 @@ Læs [AGENTS.md](./AGENTS.md) før arbejde i projektet.
 2. I Supabase Auth: slå e-mail/kodeord til, og slå offentlig signup fra.
 3. Tilføj redirect-URL'er: `/auth/callback`, `/auth/confirm` og `/saet-kodeord`
    under Site URL `http://localhost:3000` (senere produktionens domæne).
-4. Opdatér invite- og recovery-skabeloner, så de peger på
-   `/auth/confirm?token_hash={{ .TokenHash }}&type=invite|recovery&next=/saet-kodeord`.
+4. Opdatér Auth-mailskabelonerne (to separate links):
+   - Invite:
+     `{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=invite&next=/saet-kodeord`
+   - Reset password:
+     `{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=recovery&next=/saet-kodeord`
 5. `npm install` og `npm run dev`.
 
 Invitationer sendes først i næste skive (træner opretter forløb). Klienten
