@@ -10,99 +10,224 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 # OWDT v2 — project instructions
 
+## How to read this file
+
+This document is the shared source of truth for Mathias, Cursor and other agents.
+
+**October 2026 — product direction (for review).** The sections *Purpose*,
+*Work and voice*, *Public product*, *Private owner space*, *Privacy and
+content*, and *What this replaces* capture a direction Mathias has approved
+in conversation. They are written in detail so a second agent can review the
+idea before UI or schema changes. Do not treat livestream, uploads or chat as
+approved to implement until a later slice explicitly asks for them.
+
+**Still in force and already built:** authentication (slice 1), and the
+private data model plus RLS (slice 2A). Do not throw those away. Dogs,
+programmes and sessions remain the join between a real dog, an owner and
+Mathias. Content will attach to dogs over time.
+
+The old OWDT/Clarity repository is a reference archive. This is a clean
+project, not a refactor of that application.
+
+If a request changes these boundaries, explain the tradeoff and ask whether
+the product direction should change. Explicit user decisions take precedence.
+Do not silently expand scope.
+
+---
+
 ## Purpose
 
-Build a small personal dog training website for Mathias Porse in Risskov/Aarhus,
-with a private training space for clients in an active programme.
+OWDT is Mathias Porse’s site in Risskov/Aarhus.
 
-Training is an ongoing relationship between trainer, handler and dog.
-The product supports: plan → train → observe → share → feedback → adjust.
+The **public product** is the dogs and the content made with them: a live
+window when something is on, otherwise a clear “not live”, then the dogs,
+then clips and sessions a given dog appears in. Inspiration for *first
+impression* is a rundown like [sonderthon.dk](https://sonderthon.dk/) —
+time, title, one line — not a classic service homepage (Tilgang / Træning /
+Om as the thing you meet). Steal the **program-as-front-door** pattern.
+Do not copy Twitch sub-goals, guests-as-spectacle, giveaways or chat-runs
+the show.
 
-The old OWDT/Clarity repository is a reference archive. This is a clean project,
-not a refactor or migration of the old application. Only port an idea, asset or
-component after reviewing its relevance and dependencies.
+The **private product** (login, invitation only) is for owners whose dogs
+Mathias actually works with: the dog, upcoming 1-1 sessions, a short
+handover if there is something to say, and later the content that exists
+for *their* dog. The owner should feel **relief**, not homework. The work
+is the dog’s 1-1 time. The hoped-for effect is a more need-fulfilled dog
+and, over time, better self-regulation in the situations they care about.
+Do not promise results, prices or testimonials.
 
-## Training philosophy and voice
+Vibe: **dog performance coach meets content creation**. Not a trick school.
+Not a social network.
 
-- Understand the individual dog, handler and situation before prescribing exercises.
-- Support engagement, clear communication, on/off, neutrality, thoughtful reward
-  placement and achievable progression.
-- Make observations and adjust the plan rather than presenting one universal method.
-- Give clients a safe place to share imperfect training and ask questions.
-- Write public content in Danish, plainly and personally.
-- Do not invent qualifications, testimonials, results, prices or availability.
-- Do not turn internal training concepts into unsupported marketing claims.
-- Mathias reviews the final wording about his methods and services.
+---
 
-## Product boundaries
+## Work and voice
 
-The public site introduces Mathias, his approach and training services, and makes
-contact easy. Suggested navigation: Forside, Tilgang, Træning, Om, Kontakt.
-These can initially be sections on one page; separate routes must earn their place.
+### The work (approved)
 
-The first functional client area contains only:
-- Authentication.
-- Dogs and their active training programmes.
-- A private timeline of focus, observations, exercises and feedback.
-- Upcoming physical sessions in a simple calendar or list.
+- Mathias works **1-1 with the dog**, not as a trick instructor for the
+  owner. The owner is not the pupil.
+- A typical shape (example, not a sold package until Mathias says so): a
+  run of sessions around a given challenge, including walking / airing the
+  dog. Do not invent availability or a session count in the UI.
+- There may be **very light handovers** after a session (what happened, what
+  to be aware of). That is enough. The owner does not run a training diary
+  between sessions unless they themselves want to send a short note later.
+- Recordings and public content from a dog may exist **only if the owner
+  wants that**. Default is private. Consent is not a footnote; it is how
+  public content is allowed to exist. This is not the implementation focus
+  yet, but it is a hard rule for later media.
 
-The trainer needs a minimal way to manage these records and provide feedback.
-Do not build a separate administration platform.
+### Voice (approved)
 
-An entry belongs to a training programme. It is not a public social post.
-A client sees only their own authorised training spaces; Mathias sees those he
-manages through programme membership, not because of the trainer role alone.
+- Public copy in Danish. Apolitical.
+- Little “jeg jeg jeg”. The dogs and the footage are the content.
+- Avoid “øvelser”, method slogans and unsupported claims.
+- Short labels, names, times. Picture, name, breed on a dog.
+- Mathias reviews final wording about methods and services.
+- Do not invent qualifications, testimonials, results, prices or
+  availability.
 
-Deferred until the core flow works:
-- Media uploads and video feedback.
-- A visual exercise whiteboard and saved scenarios.
-- Shared training posts from Mathias (broadcast to several programmes). Build
-  only private per-programme entries until that is explicitly requested.
+### What this is not
 
-Out of scope:
-- Social networking, followers, friends, likes and public feeds.
-- General-purpose chat, AI assistants and avatars.
-- Shop, payments, subscriptions and complex booking engines.
-- Organisations, multi-trainer tenancy and elaborate role systems.
-- Realtime infrastructure and complex notifications.
-- Open self-signup.
+- Not teaching the handler a curriculum at home (the old
+  plan → train → observe → share → feedback loop is **demoted**).
+- Not open “create your dog” as a toy for anonymous visitors. Dogs in the
+  private space are created by Mathias in an invited programme. Public
+  “Mød hundene” shows dogs that are allowed on the public surface, not a
+  self-serve kennel signup.
+- Not a general chat product. Any future owner communication stays inside
+  the authorised dog/programme and must not leak into public program,
+  livestream or highlights unless explicitly released.
 
-If a request changes these boundaries, explain the tradeoff and ask whether the
-product direction should change. Explicit user decisions take precedence over
-this document. Do not silently expand scope.
+---
 
-## Agreed product decisions
+## Public product (`/`)
 
-These decisions are approved and must be followed in implementation.
+First paint should feel closer to a live/content surface than to a brochure.
 
-### Accounts and login
+### Landing order
 
-- Only the trainer invites clients. There is no public registration.
-- Login is email and password via Supabase Auth. Do not add magic links, OAuth
-  or passkeys unless explicitly requested.
-- An invitation must let the client choose their own password on first access.
-- Include: invitation callback, logout, and password reset.
-- Disable public signup in the Supabase Auth settings.
+1. **Live window**
+   - If something is live: it is visible (player or clear “se med”).
+   - If nothing is live: the window is **minimised**, it is stated that
+     nothing is live, and the visitor is led **straight to the dogs**.
+   - Do not leave a large dead player as the hero when offline.
+2. **Program** (optional block, only if there is something to put on it)
+   - Vertical rundown: time + day, title, one line.
+   - Public items only (announced live, public outing, published drop).
+   - Private client appointments do **not** belong here.
+3. **Mød hundene**
+   - Photo, name, breed. That is enough on the grid.
+   - Click a dog → content that dog appears in (highlight-reel logic).
+   - Empty and honest if there are no public dogs yet.
+4. **OWDT prose** sits *under* that, small, if needed — not as the first
+   meeting. No long Tilgang/Træning/Om as the front door.
 
-### Timeline posts
+Login stays available (corner) for owners.
 
-- Entry kinds: `focus`, `exercise`, `observation`, `feedback`.
-- Clients may create only `observation`.
-- The trainer may create all four kinds, but only on programmes where they are
-  the `trainer_id`. The `trainer` profile role is not a global write grant.
-- The client compose field is labelled **“Del en opdatering eller stil et
-  spørgsmål”**. The app sets `kind = observation` automatically. Do not ask the
-  client to pick a post type.
+### Content over time
+
+Dogs and content *are* the product. Behind the scenes, content should
+attach to dogs (and thus to programmes/owners). New clips will keep being
+created on dogs. The public dog page is “what this dog is in”, not a
+training plan.
+
+Until media exists, the layout may be empty. Never fake a reel or a live
+stream.
+
+---
+
+## Private owner space (login)
+
+Audience: invited owners only. Mathias sees the programmes he is
+`trainer_id` on, not the world because of the trainer role.
+
+### What the owner should meet
+
+- Their dog (name; later photo).
+- Upcoming 1-1 sessions (simple list, Europe/Copenhagen).
+- Short handover from Mathias when there is something to say.
+- Later: content created with *their* dog, including items that stayed
+  private.
+
+This is **aflastning**: Mathias takes the 1-1, the walk, the work on the
+named challenge. The owner should not be asked to perform as a student.
+
+### Observations and timeline (demoted)
+
+Slice 2A still has `entries` with kinds `focus | exercise | observation |
+feedback`. That schema may remain.
+
+**Product change:** do not build the client composer
+“Del en opdatering eller stil et spørgsmål” as the core of the private
+space. A later, optional short note from the owner is fine. Do not design
+the app as a homework loop.
+
+Trainer-written light handover can use existing entry kinds (e.g. `feedback`
+or `focus`) or a future dedicated field. Do not add tables for this until
+a slice asks.
 
 ### Programme list
 
 - Show `active` programmes first.
-- Paused and ended programmes remain accessible to the same authorised users.
+- Paused and ended remain accessible to the same authorised people.
 
-## Data model (approved for the next slices)
+---
 
-One Next.js app. No separate admin app. Timestamps are `timestamptz` (UTC) and
-displayed in Europe/Copenhagen.
+## Privacy and content (rules for all later media)
+
+Three layers. Mixing them is a product bug.
+
+| Layer | Who sees it | Examples |
+|---|---|---|
+| Public | anyone | live when on; published clips; public program row; dog on “Mød hundene” if allowed |
+| Owner-private | Mathias + that dog’s owner | session times, handover, unreleased footage, anything the owner has not released |
+| Internal | Mathias only (this product has one trainer) | working notes, pre-release cuts |
+
+- Default for a session and its media: **owner-private**.
+- Public program and “Mød hundene” only include what is explicitly public.
+- Owner chat (if ever built) never becomes a public post or live overlay
+  without a distinct release step.
+- Future uploads: private storage, authorised access, consent recorded
+  before a clip can appear on a public dog page.
+
+Do not implement storage, live or chat in the current stage.
+
+---
+
+## What this replaces (so reviewers can diff)
+
+| Earlier (slice 1–2A docs) | Now |
+|---|---|
+| Public: Forside, Tilgang, Træning, Om, Kontakt as the meeting | Public: live (or minimised) → dogs → that dog’s content; prose below |
+| Relationship framed as trainer + handler + dog, owner trains at home | 1-1 with the dog; owner is partner with privacy, not the pupil |
+| Client timeline of observations as the core loop | Owner sees dog, times, handover, later their dog’s content |
+| “Create your dog” as something for visitors to do | No. Public dogs are a content index. Private dogs are invited programmes |
+| Shared training posts / broadcast as a later maybe | Public content is dog-centric highlights/live, with consent |
+| Design: calm dark zinc, working-dog, not SaaS | Keep calm and readable; public surface may feel more “on air” (program, live, reels) without becoming a Twitch clone |
+
+Auth, RLS and the tables `profiles`, `dogs`, `programmes`, `entries`,
+`sessions` stay. New content tables are **not** approved until a media
+slice.
+
+---
+
+## Accounts and login (unchanged)
+
+- Only the trainer invites clients. No public registration.
+- Login is email and password via Supabase Auth. No magic links, OAuth or
+  passkeys unless explicitly requested.
+- Invitation lets the client choose their own password.
+- Include invitation callback, logout, password reset.
+- Disable public signup in Supabase Auth settings.
+
+---
+
+## Data model (implemented in slice 2A)
+
+One Next.js app. No separate admin app. Timestamps are `timestamptz` (UTC)
+and displayed in Europe/Copenhagen.
 
 Roles on `profiles`: `trainer` | `client`. One trainer in this product.
 
@@ -131,118 +256,149 @@ auth.users
                               notes (optional)
 ```
 
-A programme has exactly one dog, one client and one trainer. `programmes.client_id`
-must always equal `dogs.owner_id` for that `dog_id`. Enforce this in the
-database (constraint and/or trigger), not only in the UI.
+A programme has exactly one dog, one client and one trainer.
+`programmes.client_id` must equal `dogs.owner_id` for that `dog_id`
+(enforced in the database).
 
-No contact-message table in v1. Contact stays on the public page (`mailto:` or a
-later simple form).
+No contact-message table. Public contact can wait; the front door is
+content, not a form.
 
-## Access rules
+**Likely later (not in the database yet):** media objects with
+`dog_id`, visibility (`public` | `owner` | `internal`), consent, and
+optional `session_id` / `programme_id`. Do not add them until asked.
 
-Hiding UI is not access control. Use Supabase Row Level Security and repeat
-authorisation in server code (layouts, pages, server actions).
+---
+
+## Access rules (implemented in slice 2A)
+
+Hiding UI is not access control. Use RLS and repeat authorisation in
+server code.
 
 Helpers:
 
-- `is_trainer()` — current user’s `profiles.role` is `trainer`.
-- `can_access_programme(id)` — `programmes.trainer_id = auth.uid()` **or**
-  `programmes.client_id = auth.uid()`.
+- `is_trainer()` — `profiles.role` is `trainer` for `auth.uid()`.
+- `can_access_programme(id)` — `trainer_id = auth.uid()` or
+  `client_id = auth.uid()`.
 
-`is_trainer()` may be used to allow creating a new programme that sets
-`trainer_id = auth.uid()`. It must not grant select/update/insert on other
-trainers’ programmes, dogs, entries or sessions.
+`is_trainer()` may be used to create a programme with
+`trainer_id = auth.uid()`. It must not grant access to other trainers’
+rows.
 
 | Table | SELECT | INSERT | UPDATE |
 |---|---|---|---|
-| `profiles` | own row; a user may read profiles of people on programmes they can access | trigger on `auth.users`, default `client` | own `display_name` only |
-| `dogs` | owner, or trainer on a programme with that dog | trainer, and only with `owner_id` matching the programme client they are creating | owner (name/notes) and that programme’s trainer |
-| `programmes` | `can_access_programme` | trainer, with `trainer_id = auth.uid()` and `client_id = dog.owner_id` | that programme’s trainer |
-| `entries` | via programme access | client: `observation` on programmes where they are `client_id`; trainer: any kind on programmes where they are `trainer_id` | own row only |
+| `profiles` | own row; profiles of people on programmes the user can access | trigger on `auth.users`, default `client` | own `display_name` only |
+| `dogs` | owner, or trainer on a programme with that dog (plus orphan-dog select for the creating trainer — see migration) | trainer, `owner_id` a client | owner (name/notes) and that programme’s trainer |
+| `programmes` | `can_access_programme` | trainer, `trainer_id = auth.uid()`, `client_id = dog.owner_id` | that programme’s trainer |
+| `entries` | via programme access | client: `observation` on own programmes; trainer: any kind on own programmes | own row only |
 | `sessions` | via programme access | that programme’s trainer | that programme’s trainer |
 
-No `anon` access to private tables.
+No `anon` access to private tables. Public dog/content pages will need an
+**explicit public subset** later (separate policies or a public view). Do
+not open `dogs` to `anon` without a visibility flag.
 
 ### Privileged columns
 
-Protect these against unauthorised client writes (RLS `WITH CHECK`, `REVOKE`
-direct updates, and triggers as needed):
-
 - `profiles.role` — only a privileged server process may set `trainer`.
-- `dogs.owner_id` — immutable after insert, or only via a privileged path.
-- `programmes.trainer_id`, `programmes.client_id`, `programmes.dog_id`.
-- `entries.author_id` — always `auth.uid()` on insert; immutable.
-- `entries.programme_id` — set on insert; immutable.
-- `entries.kind` — set on insert; immutable. Clients cannot insert anything
-  other than `observation`.
+- `dogs.owner_id` — immutable after insert.
+- `programmes.trainer_id`, `client_id`, `dog_id` — immutable.
+- `entries.author_id` — `auth.uid()` on insert; immutable.
+- `entries.programme_id`, `kind` — set on insert; immutable.
 
-Server actions must not trust these fields from the client. Derive `author_id`
-and client `kind` on the server.
+Promote trainer with `supabase/scripts/promote_trainer.sql` as a one-off
+SQL role, not from the app.
+
+---
 
 ## Routes
 
+Current (built): `/`, `/login`, `/glemt-kodeord`, `/saet-kodeord`,
+`/auth/confirm`, `/auth/callback`, `/auth/log-ud`, `/forloeb` (placeholder).
+
+Intended public/private split (not all built):
+
 | Route | Audience | Purpose |
 |---|---|---|
-| `/` | public | One page: Forside, Tilgang, Træning, Om, Kontakt |
-| `/login` | public | Email and password |
-| `/glemt-kodeord` | public | Request password reset |
-| `/saet-kodeord` | signed-in (invite or recovery session) | Choose or replace password |
-| `/auth/confirm` | Auth email links | `token_hash` + `type` (invite, recovery) |
-| `/auth/callback` | Auth redirects | PKCE `code` exchange |
-| `/auth/log-ud` | signed-in | Logout |
-| `/forloeb` | authorised users | Programme list (active first) |
-| `/forloeb/[id]` | programme members | Timeline and upcoming sessions |
-| `/forloeb/nyt` | trainer creating a programme they will own | Create dog + programme + invite |
+| `/` | public | Live (or minimised) → program if any → Mød hundene |
+| `/hunde/[id]` | public | Content that dog appears in (empty until media) |
+| `/login` … `/auth/*` | as today | Auth |
+| `/forloeb` | invited | Owner: dog(s), upcoming sessions, handover |
+| `/forloeb/[id]` | members | Same for one programme |
+| `/forloeb/nyt` | trainer | Create dog + programme + invite (later) |
+
+---
 
 ## Design direction
 
-Carry forward the agreed OWDT design direction:
+- Dark surfaces, restrained accents, large type, small uppercase labels
+  still apply.
+- Public first screen: rundown + dogs, not a SaaS dashboard and not a
+  five-section brochure.
+- When live is off, shrink that chrome; do not dominate the page with a
+  black rectangle.
+- Readable contrast, visible focus, sensible mobile, honour
+  `prefers-reduced-motion`.
+- Do not import old OWDT chrome without reviewing it.
 
-- Black and dark zinc surfaces, subdued borders and restrained blue/cyan accents.
-- Generous spacing, clear hierarchy, large headings and small uppercase labels.
-- Rounded cards where they improve grouping.
-- A calm, serious working-dog character with a personal voice.
-
-Avoid decorative glow, parallax, excessive animation and generic SaaS dashboards.
-Use readable contrast, visible focus states, labelled controls and sensible mobile
-layouts. Light typography must remain legible. Motion should be minimal and honour
-reduced-motion preferences.
-
-Treat this direction as a starting point, not a claim that the old UI has been
-validated here. Review old assets and components before importing them.
+---
 
 ## Technical principles
 
 Preferred stack: Next.js, TypeScript, Tailwind CSS, Supabase and Vercel.
-Use one application, with no separate backend or microservices.
+One application.
 
-- Prefer current official Next.js App Router and `@supabase/ssr` patterns.
-- On Next.js 16+, session refresh belongs in `proxy.ts` (`export async function
-  proxy`). Use `middleware.ts` only if the Next.js version still requires it.
-- Create cookie-based clients with `@supabase/ssr`. Protect pages with
-  `supabase.auth.getClaims()`, not `getSession()`.
-- Use `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`.
-  Keep the secret/service-role key on the server only.
-- Prefer standard framework patterns and a small, understandable file structure.
-- Add dependencies and abstractions only for a demonstrated need.
-- Keep credentials out of source control; document required variables in an
-  example environment file.
-- Keep schema changes in versioned migrations. Avoid speculative tables.
-- Any future uploads must use private storage and authorised access.
+- Current Next.js App Router and `@supabase/ssr`.
+- Next.js 16+: session refresh in `proxy.ts`. Protect with `getClaims()`.
+- `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`.
+  Secret key server-only.
+- Versioned migrations. No speculative tables.
+- Future uploads: private storage and authorised access.
+
+---
+
+## Scope for implementers
+
+**Do not implement until the next requested slice:** public program/dogs
+UI, owner session list, invitation-from-app, media, live, chat, whiteboard.
+
+**Out of scope unless Mathias explicitly expands the product:** social
+graph, followers, likes, public comments, general-purpose chat, AI
+assistants, shop, payments, complex booking, multi-trainer tenancy,
+realtime infrastructure as a platform.
+
+**Deferred on purpose:** livestream player, uploads, highlight pipeline,
+consent UI, public visibility flags on dogs/media.
+
+---
 
 ## Working agreement
 
-The repository is the shared source of truth for Mathias, Cursor and ChatGPT.
-Do not assume another agent can see local or uncommitted changes.
+The repository is the shared source of truth. Do not assume another agent
+can see local or uncommitted changes.
 
-Current stage: slice 2A complete (schema, migrations and RLS). Do not
-implement programme UI, invitation-from-app, timeline or calendar until
-the next requested slice.
+Current stage: slice 2A complete (schema, migrations, RLS) on local and
+hosted; Mathias’s profile promoted to `trainer`. Product direction above
+is for **review**. Next implementation slice must be requested explicitly
+(likely public landing as live/dogs, and/or private dog + sessions without
+an observation composer).
 
-Build one small, usable slice at a time. Run checks appropriate to the change
-and report what was actually verified. Never present a stub or mock as a working
-integration.
+Build one small, usable slice at a time. Report what was actually verified.
+Never present a stub as a working live stream or a fake reel.
 
-Keep changes focused. Review existing code before editing it, avoid overwriting
-unrelated work. Update these instructions when Mathias explicitly changes the
-product direction.
+Update this file when Mathias explicitly changes the product direction.
+
+---
+
+## Notes for a reviewing agent
+
+Please challenge at least:
+
+1. Is “dogs + content as the front door” compatible with invitation-only
+   private work, or does public “Mød hundene” leak client dogs?
+2. Is a minimised live window honest enough when most days nothing is live?
+3. Does demoting observations leave the owner with too little voice?
+4. Should public dogs be a separate “published” set, never the same row as
+   a private client dog until consent is stored?
+5. Any conflict with existing RLS if `/hunde/[id]` is public before a
+   visibility column exists?
+
+Do not implement those answers into schema without Mathias confirming.
